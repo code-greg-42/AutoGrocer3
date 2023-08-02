@@ -20,3 +20,8 @@ def main():
         # check if the user wants to exit the program
         if chatbot_agent.next_task == 'quit':
             break
+
+
+if __name__ == '__main__':
+    main()
+

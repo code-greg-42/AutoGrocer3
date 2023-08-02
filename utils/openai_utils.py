@@ -21,7 +21,7 @@ def gpt4_chat_call(_type, _content):
     _messages = format_prompt(_type, _content)
     print(_messages)
     
-    if _type == 'recommend' or _type == 'extract':
+    if _type == 'recommend_recipe' or _type == 'extract':
         function_name = 'save_recipe'
     else:
         function_name = _type

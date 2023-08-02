@@ -2,7 +2,7 @@ import os
 import boto3
 import openai
 from google.cloud import vision
-from utils.print_messages import cook_tim_sys_prompt
+from utils.print_messages import cook_tim_sys_prompt, cook_tim_intro
 
 # NECESSARY ENV VARIABLES:
 # 1. AWS_ACCESS_KEY_ID
@@ -31,17 +31,21 @@ def auth_all(user_name, use_twilio=False):
     # Check if the bucket exists
     try:
         aws_s3_client.head_bucket(Bucket=aws_bucket_name)
-    except aws_s3_client.exceptions.NoSuchBucket:
+    except:
         # If the bucket does not exist, create it
         aws_s3_client.create_bucket(Bucket=aws_bucket_name)
     try:
         aws_response = aws_s3_client.get_object(Bucket=aws_bucket_name, Key='chat_history.txt')
         chat_history = aws_response['Body'].read().decode('utf-8')
-    except aws_s3_client.exceptions.NoSuchKey:
+    except:
         # if chat history doesn't exist yet, init it
         chat_history = [{
             "role": "system",
             "content": cook_tim_sys_prompt
+        },
+        {
+            "role": "assistant",
+            "content": cook_tim_intro
         }]
     # print("AWS S3 initialized.")
     

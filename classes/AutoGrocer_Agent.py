@@ -39,7 +39,7 @@ class AutoGrocer_Agent:
             gpt_response = gpt4_chat_call('chat_conversation', self.chat_history)
             self.recent_gpt_response = gpt_response
             self.add_to_chat_history("assistant", gpt_response)
-            
+            print(f"Cook Tim: {gpt_response}")
         except Exception as e:
             print(e)
     
@@ -52,13 +52,15 @@ class AutoGrocer_Agent:
             self.recipe_details_from_url(url_in_message)
         
         else:
+            print(self.recent_user_input)
             self.add_to_chat_history("user", self.recent_user_input)
+            print(self.chat_history)
             next_step_choice = gpt3_categorize_msg(self.chat_history)
-            
+            print(next_step_choice)
             # run it one more time if gpt3_categorize_msg returns 'none' (adds robustness to the program)
             if next_step_choice == 'none':
                 next_step_choice = gpt3_categorize_msg(self.chat_history)
-
+            print(next_step_choice)
         self.next_task = next_step_choice
     
     # executes self.next_task
@@ -108,21 +110,19 @@ class AutoGrocer_Agent:
         
     # TODO: add print statement for recipe details to be displayed to user
     def recommend_recipe(self):
-        recipe_details = gpt4_chat_call('recommend', self.chat_history)
+        recipe_details = gpt4_chat_call('recommend_recipe', self.chat_history)
         self.store_item('recipe', recipe_details)
         # add print statements for user to see basic recipe details
     
     # inputs a user message and runs a full cycle of the AutoGrocer Agent
     # flow: user input >> determine next task >> execute next task >> return response
     def run_single_agent_cycle(self):
+    
+        self.get_user_input()
         
-        self.recent_user_input = self.get_user_input()
-        
-        # user input message is added to chat history in determine_next_task
-        self.determine_next_task(self.recent_user_input)
-        
-        # any gpt response messages are added to chat history in execute_next_task
-        self.execute_next_task()
+        self.determine_next_task()
+        print(self.next_task)
+        # self.execute_next_task()
         
     # types: recipe, pantry, food_photo
     def store_item(self, _type, _content):
@@ -148,5 +148,6 @@ class AutoGrocer_Agent:
             else:
                 pantry_item = _file_contents['Body'].read().decode('utf-8')
                 print(f"{i+1}. {pantry_item['name']}: {pantry_item['quantity']} {pantry_item['unit']}")
+                
         return True
 
