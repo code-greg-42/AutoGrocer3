@@ -57,10 +57,11 @@ class AutoGrocer_Agent:
             print(self.chat_history)
             next_step_choice = gpt3_categorize_msg(self.chat_history)
             print(next_step_choice)
-            # run it one more time if gpt3_categorize_msg returns 'none' (adds robustness to the program)
+            
+            # originally was going to run it once more, but it does not usually change anything, and sending to chat_conversation allows for a more interactive response.
             if next_step_choice == 'none':
-                next_step_choice = gpt3_categorize_msg(self.chat_history)
-            print(next_step_choice)
+                next_step_choice = 'chat_conversation'
+                
         self.next_task = next_step_choice
     
     # executes self.next_task
@@ -120,9 +121,9 @@ class AutoGrocer_Agent:
     
         self.get_user_input()
         
-        self.determine_next_task()
-        print(self.next_task)
-        # self.execute_next_task()
+        #self.determine_next_task()
+        #print(self.next_task)
+        #self.execute_next_task()
         
     # types: recipe, pantry, food_photo
     def store_item(self, _type, _content):
@@ -151,3 +152,7 @@ class AutoGrocer_Agent:
                 
         return True
 
+    # test function only
+    def test_function(self):
+        print("This is a test function.")
+        

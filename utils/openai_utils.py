@@ -50,3 +50,4 @@ def generate_photo(_prompt):
     )
     
     return response['data'][0]['url']
+
